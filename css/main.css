@@ -1,0 +1,27 @@
+body{
+    background-color: #47475a;
+}
+section{
+    margin-top: 50px;
+}
+
+#log, #reg {
+    display: none;
+}
+
+.user {
+    font-weight: bold;
+    color: black;
+}
+
+.time, .userComment {
+    color: #fff;
+}
+
+.replies, .comment {
+    margin-top: 10px;
+}
+
+.replies {
+    margin-left: 20px;
+}
