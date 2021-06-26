@@ -11,8 +11,8 @@
         $isAdmin = true;
     }
 
-    $conn = new mysqli('localhost',  'root', '', 'forumDyskusyjne');
-    
+    $conn = new mysqli('localhost',  'root', '', 'pazdan');
+
     function createCommentRow($data) {
         global $conn;
         $response = '
@@ -26,7 +26,7 @@
             $response .= '</div>
                 <div class="userComment">'.$data['comment'].'</div>
                 <div class="reply"><a href="javascript:void(0)" data-commentID="'.$data['id'].'" onclick="reply(this)" style="text-decoration: none; color: #000">ODPOWIEDZ</a></div>
-                
+
                 <div class="replies">';
 
             $sql = $conn->query("SELECT replies.id, name, comment, DATE_FORMAT(replies.createdOn, '%Y-%m-%d') AS createdOn FROM replies INNER JOIN users ON replies.userID = users.id WHERE replies.commentID = '".$data['id']."' ORDER BY replies.id DESC LIMIT 1");
@@ -92,14 +92,14 @@
         $password = $conn->real_escape_string($_POST['password']);
 
         if ( filter_var($email,FILTER_VALIDATE_EMAIL)) {
-            $sql = $conn->query(query: "SELECT id FROM users WHERE email='$email'");
+            $sql = $conn->query("SELECT id FROM users WHERE email='$email'");
             if ($sql->num_rows > 0)
                 exit('failedUserExists');
             else {
                 $ePassword = password_hash($password, PASSWORD_BCRYPT);
-                $conn->query(query: "INSERT INTO users (name,email,password,createdOn) VALUES('$name', '$email', '$ePassword', NOW())");
+                $conn->query("INSERT INTO users (name,email,password,createdOn) VALUES('$name', '$email', '$ePassword', NOW())");
 
-                $sql = $conn->query(query: "SELECT id FROM users ORDER BY id DESC LIMIT 1");
+                $sql = $conn->query("SELECT id FROM users ORDER BY id DESC LIMIT 1");
                 $data = $sql->fetch_assoc();
 
                 $_SESSION['loggedIn'] = 1;
@@ -119,14 +119,14 @@
         $password = $conn->real_escape_string($_POST['password']);
 
         if ( filter_var($email,FILTER_VALIDATE_EMAIL)) {
-            $sql = $conn->query(query: "SELECT id FROM users WHERE email='$email'");
+            $sql = $conn->query("SELECT id FROM users WHERE email='$email'");
             if ($sql->num_rows > 0)
                 exit('failedUserExists');
             else {
                 $ePassword = password_hash($password, PASSWORD_BCRYPT);
-                $conn->query(query: "UPDATE `users` SET `id`='".$_SESSION['userID']."',`name`='$name',`email`='$email',`password`='$ePassword',`createdOn`=NOW() WHERE `users`.`id`= '".$_SESSION['userID']."'");
+                $conn->query("UPDATE `users` SET `id`='".$_SESSION['userID']."',`name`='$name',`email`='$email',`password`='$ePassword',`createdOn`=NOW() WHERE `users`.`id`= '".$_SESSION['userID']."'");
 
-                $sql = $conn->query(query: "SELECT id FROM users ORDER BY id DESC LIMIT 1");
+                $sql = $conn->query("SELECT id FROM users ORDER BY id DESC LIMIT 1");
                 $data = $sql->fetch_assoc();
 
                 $_SESSION['loggedIn'] = 1;
@@ -308,10 +308,10 @@
             <div class="row justify-content-evenly">
                 <!-- DODAWANIE NOWYCH KOMENTARZY -->
                 <div class="col-md-5 p-3 mb-2 bg-secondary text-white" style="max-height: 350px;">
-                    
+
                     <textarea class="form-control" id="mainComment" placeholder="Dodaj nowy komentarz" cols="30" rows="10"></textarea><br>
                     <button class="btn-primary btn" style="float: right" onclick="isReply=false;" id="addComment">Dodaj komentarz</button>
-                    
+
                 </div>
                 <!-- SEKCJA DODANYCH KOMENTARZY -->
                 <div class="col-md-5 p-3 mb-2 bg-secondary text-white">
@@ -322,11 +322,11 @@
                             <div class="row">
                                 <div class="col-md-6 col-6">
                                     <input class="form-control" type="text" name="idRep" placeholder="ID odpowiedzi"/>
-                                    <div><button id="delete" name="delete">USUN</button></div> 
+                                    <div><button id="delete" name="delete">USUN</button></div>
                                 </div>
                                 <div class="col-md-6 col-6">
                                     <input class="form-control" type="text" name="idComment" placeholder="ID Komentarza"/>
-                                    <div><button id="deleteComm" name="deleteComm">USUN</button></div> 
+                                    <div><button id="deleteComm" name="deleteComm">USUN</button></div>
                                 </div>
                             </div>';
                              ?>
@@ -338,7 +338,7 @@
             </div>
             <!-- ODPOWIEDZI -->
                 <div class="replyRow" style="max-height: 100px; display:none">
-                    
+
                         <textarea class="form-control" id="replyComment" placeholder="Dodaj nowy komentarz" cols="30" rows="1"></textarea><br>
                         <button class="btn-primary btn" onclick="isReply=true;" style="float: right" id="addReply">Dodaj komentarz</button>
                         <button type="button" class="btn-close" aria-label="Close" onclick="$('.replyRow').hide();"></button>
@@ -365,7 +365,7 @@
 
         $(document).ready(function () {
             $("#addComment, #addReply").on('click', function () {
-                var comment; 
+                var comment;
                 if (!isReply)
                  comment = $("#mainComment").val();
                 else
