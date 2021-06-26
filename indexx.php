@@ -11,7 +11,7 @@
         $isAdmin = true;
     }
 
-    $conn = new mysqli('localhost',  'root', '', 'pazdan');
+    $conn = new mysqli('localhost',  'root', '', 'forumDyskusyjne');
 
     function createCommentRow($data) {
         global $conn;
